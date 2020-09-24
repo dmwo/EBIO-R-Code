@@ -1,0 +1,30 @@
+---
+title: "R Markdown Test"
+author: Dylan Oh
+date: 21 September, 2020
+output: pdf_document
+---
+
+# EBIO 3080 Selection Lab (Week 4)
+
+## Setting Up the Code
+```{r, include = FALSE}
+library(showtext)
+dest <- file.path("C:", "Windows", "Fonts", "ARIALN.ttf")
+font_add("arialn", regular = dest)
+showtext_auto()
+```
+
+Calculating mean beak size from the data:
+```{r}
+setwd("E:/Documents/GitHub/EBIO-R-Code/EBIO 3080/Lab/Week 4")
+beak <- read.csv("finchbeaksize.csv", header = T)
+survive <- subset(beak, Survived == 1)
+mean_all <- mean(beak$Beak_Size)
+mean_survive <- mean(survive$Beak_Size)
+```
+## Pre-Quiz
+
+```{r, echo = FALSE, fig.width = 4, fig.height = 3}
+
+```
