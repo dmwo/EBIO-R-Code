@@ -1,8 +1,10 @@
 ---
 title: "R Markdown Test"
-author: Dylan Oh
-date: 21 September, 2020
-output: pdf_document
+author: "Dylan Oh"
+date: "21 September, 2020"
+output:
+  html_document:
+    df_print: paged
 ---
 
 # EBIO 3080 Selection Lab (Week 4)
@@ -18,13 +20,53 @@ showtext_auto()
 Calculating mean beak size from the data:
 ```{r}
 setwd("E:/Documents/GitHub/EBIO-R-Code/EBIO 3080/Lab/Week 4")
-beak <- read.csv("finchbeaksize.csv", header = T)
-survive <- subset(beak, Survived == 1)
-mean_all <- mean(beak$Beak_Size)
-mean_survive <- mean(survive$Beak_Size)
+heritability <- read.csv(file.choose(), header = T)
+mid_parent <- (heritability$father_beak + heritability$mother_beak) / 2
+model <- lm(heritability$offspring ~ mid_parent)
+h2 <- signif(summary(model)$coeff[2, 1], 2)
+p <- signif(summary(model)$coeff[2, 4], 2)
 ```
+
+h<sup>2</sup> value: **`r h2`**
+
 ## Pre-Quiz
 
-```{r, echo = FALSE, fig.width = 4, fig.height = 3}
-
+```{r, echo = FALSE, fig.width = 8, fig.height = 6}
+par(bg = "#cbcbcf")
+par(mar = c(4.1, 5, 4.1, 5))
+plot(mid_parent, heritability$offspring_beak,
+     main = "",
+     xlab = "",
+     ylab = "",
+     axes = F,
+     pch = 19,
+     col = "#b33b3b")
+title(main = "Heritability of Beak Size in a Population of Finches",
+      family = "arialn",
+      cex.main = 2,
+      col.main = "#2c3136"
+)
+title(xlab = "Midparent Beak Size (mm)",
+      font.lab = 3,
+      family = "arialn",
+      cex.lab = 1.5,
+      col.lab = "#2c3136"
+)
+title(ylab = "Offspring Beak Size (mm)",
+      font.lab = 3,
+      family = "arialn",
+      cex.lab = 1.5,
+      col.lab = "#2c3136"
+)
+axis(side = 1, at = seq(8, 11, 0.5),
+     col = "#2c3136",
+     col.ticks = "#2c3136",
+     col.axis = "#2c3136"
+)
+axis(side = 2, at = seq(7.5, 10.5, 0.5),
+     col = "#2c3136",
+     col.ticks = "#2c3136",
+     col.axis = "#2c3136"
+)
+abline(model, lwd = 2, col = "#2c3136")
 ```
