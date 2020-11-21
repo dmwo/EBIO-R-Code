@@ -129,46 +129,92 @@ for (i in seq_len(length(gp_idx))) {
     data[data[gp_idx[i]] == "No", gp_amt_idx[i]] <- "0"
 }
 
+# Changing non-male and non-female genders to "other" for data simplicity
 data$Gender[which(data$Gender != "Male" & data$Gender != "Female")] <- "Other"
+
+# Changing the timestamp column to subject number
 data$Subject <- seq_len(nrow(data))
 
 
 #-----------------------------------------------------------------------------#
 #                    Performing Calculations and Analysis                     #
 #-----------------------------------------------------------------------------#
+# Calculating means of days/drink of subject and relatives
+mean_days <- c(mean(data$Pers_Days), mean(data$Mother_Days),
+               mean(data$Father_Days), mean(data$Sib1_Days),
+               mean(data$Sib2_Days), mean(data$Sib3_Days),
+               mean(data$Sib4_Days), mean(data$Sib5_Days),
+               mean(data$Sib6_Days), mean(data$Sib7_Days),
+               mean(data$Sib8_Days), mean(data$Sib9_Days),
+               mean(data$Sib10_Days), mean(data$GP1_Days),
+               mean(data$GP2_Days), mean(data$GP3_Days),
+               mean(data$GP4_Days))
 
-mean_days <- c("", "", "", "", "")
+# Calculating "means" of drinks/day of subject and relatives
+d_mean <- function(x, col_names) {
+    arr <- c(0)
+    for (i in seq_len(length(col_names))) {
+        tmp_arr <- x[, col_names[i]]
+        tmp_arr[tmp_arr == "0"] <- 0
+        tmp_arr[tmp_arr == "1 or less than 1"] <- 1
+        tmp_arr[tmp_arr == "2-4"] <- 2
+        tmp_arr[tmp_arr == "5-7"] <- 3
+        tmp_arr[tmp_arr == "8-10"] <- 4
+        tmp_arr[tmp_arr == "11+"] <- 5
+        arr <- c(arr, mean(as.integer(tmp_arr), na.rm = TRUE))
+    }
+    return(arr[-1])
+}
+
+mean_amts <- c(d_mean(data, "Pers_Amt"), d_mean(data, par_amt_idx),
+               d_mean(data, sib_amt_idx), d_mean(data, gp_amt_idx)) + 1
 
 
 #-----------------------------------------------------------------------------#
 #                              Producing Graphs                               #
 #-----------------------------------------------------------------------------#
-
+# Graphing scatterplot representation of data
 fig1 <- ggplot(data, aes(x = Pers_Days, y = Pers_Amt)) +
     geom_point(aes(size = Father_Amt,
-                   shape = Gender,
-                   alpha = Father_Days),
-               colour = "#65A5E2",
+                   alpha = Father_Days,
+                   colour = "#65A5E2"),
                position = position_jitter(w = 0.3, h = 0.3)) +
     geom_point(aes(size = Mother_Amt,
-                   shape = Gender,
-                   alpha = Mother_Days),
-               colour = "#E57694",
-               position = position_jitter(w = 0.3, h = 0.3))
-    scale_size_manual(name = "Drinks Per Day",
+                   alpha = Mother_Days,
+                   colour = "#E57694"),
+               position = position_jitter(w = 0.3, h = 0.3)) +
+    geom_vline(xintercept = mean_days[1], linetype = "dotdash",
+               colour = "black") +
+    geom_vline(xintercept = mean_days[2], linetype = "dotdash",
+               colour = "#E57694") +
+    geom_vline(xintercept = mean_days[3], linetype = "dotdash",
+               colour = "#65A5E2") +
+    geom_hline(yintercept = mean_amts[1], linetype = "dotdash",
+               colour = "black") +
+    geom_hline(yintercept = mean_amts[2], linetype = "dotdash",
+               colour = "#E57694") +
+    geom_hline(yintercept = mean_amts[3], linetype = "dotdash",
+               colour = "#65A5E2") +
+    scale_y_discrete(labels = c("0", "\u2264 1", "2-4", "5-7", "8-10", "11+")) +
+    scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7),
+                       labels = c("0", "1", "2", "3", "4", "5", "6", "7")) +
+    scale_size_manual(name = "Drinks/Day - Relatives",
                       values = c("0" = 1,
-                                 "1 or less than 1" = 2,
-                                 "2-4" = 3,
-                                 "5-7" = 4,
-                                 "8-10" = 5,
-                                 "11+" = 6)) +
-    scale_shape_manual(name = "Gender",
-                       values = c("Male" = 16,
-                                  "Female" = 17,
-                                  "Other" = 18)) +
-    ggtitle("") +
-    xlab("Days Drank Some Alcohol Per Week") +
-    ylab("Amount Drink Per Day") +
+                                 "1 or less than 1" = 3,
+                                 "2-4" = 5,
+                                 "5-7" = 7,
+                                 "8-10" = 9,
+                                 "11+" = 11)) +
+    scale_colour_identity(name = "Relative",
+                          breaks = c("#65A5E2", "#E57694"),
+                          labels = c("Father", "Mother"),
+                          guide = "legend") +
+    labs(title = "",
+         subtitle = "",
+         caption = "",
+         x = "Days/Week - Subject",
+         y = "Drinks/Day - Subject",
+         alpha = "Days/Week - Relatives") +
     theme(plot.title = element_text(color = "#2c3136", size = 16,
                                     family = "karla"),
           axis.title.x = element_text(color = "#2c3136", size = 10,
@@ -183,22 +229,22 @@ fig1 <- ggplot(data, aes(x = Pers_Days, y = Pers_Amt)) +
           legend.box.margin = margin(-10,0,-10,-10),
           legend.key.size = unit(0.8, "line"))
 print(fig1)
+ggsave("scatter.png", units = "in", width = 5, height = 4, dpi = 1000)
 
-ggsave("test.png", units = "in", width = 5, height = 4, dpi = 1000)
-
-fig2 <- ggplot() +
-    geom_histogram(data = data,
-                   color = "white",
-                   aes(x = Pers_Days, fill = "#e99c9c")) +
-    geom_histogram(data = data,
-                   color = "white",
-                   aes(x = Mother_Days, fill = "#9ba5bd")) +
-    geom_histogram(data = data,
-                   color = "white",
-                   aes(x = Father_Days, fill = "#a3b9d3")) +
-    scale_fill_identity(breaks = c("#e99c9c", "#9ba5bd", "#a3b9d3"),
-                        labels = c("Subjects",
-                                   "Mothers",
-                                   "Fathers"),
-                        guide = "legend")
-print(fig2)
+# 
+# fig2 <- ggplot() +
+#     geom_histogram(data = data,
+#                    color = "white",
+#                    aes(x = Pers_Days, fill = "#e99c9c")) +
+#     geom_histogram(data = data,
+#                    color = "white",
+#                    aes(x = Mother_Days, fill = "#9ba5bd")) +
+#     geom_histogram(data = data,
+#                    color = "white",
+#                    aes(x = Father_Days, fill = "#a3b9d3")) +
+#     scale_fill_identity(breaks = c("#e99c9c", "#9ba5bd", "#a3b9d3"),
+#                         labels = c("Subjects",
+#                                    "Mothers",
+#                                    "Fathers"),
+#                         guide = "legend")
+# print(fig2)
