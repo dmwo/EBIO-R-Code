@@ -1,0 +1,157 @@
+---
+title: "**EBIO 3080 R Assessment**"
+author: "Dylan Oh"
+date: "5 November 2020"
+output:
+  html_document:
+    df_print: paged
+    fig_retina: 1
+resource_files:
+  - '.'
+---
+
+```{r setup, include = FALSE, echo = FALSE}
+require("knitr")
+knitr::opts_chunk$set(echo = TRUE)
+dest = "E:/Documents/GitHub/EBIO-R-Code/EBIO 3080/Lab/Week 11"
+opts_knit$set(root.dir = dest)
+```
+
+```{r include = FALSE}
+library(showtext)
+library(ggplot2)
+library(htmltools)
+library(dplyr)
+dest1 <- "C:/Users/Dylan/AppData/Local/Microsoft/Windows/Fonts"
+font_add("karla",
+         regular = file.path(dest1, "Karla-Regular.ttf"))
+```
+
+```{r echo = FALSE}
+tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
+```
+
+```{css echo = FALSE}
+body {
+    font-family: Karla;
+    font-size: 12pt;
+}
+code {
+    font-family: "Fira Mono";
+}
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This assessment will analyse data on the survival of Galapagos marine iguanas, specifically how body size (quantified by weight in grams) affects selection on the population and the survival of individuals during the 1982-1983 drought on the islands.
+
+### **Analysis of the Data**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, dpi = 2000, fig.showtext = TRUE, fig.width = 8, fig.height = 6, fig.cap = "**Figure 1: Overlapping histogram comparing weights of all iguanas in a Galapagos population and the weights of the iguanas that survived the drought**. Body size is lower in the entire iguana population (mean: 176.14 g, sd: 66.49 g, median: 163.2 g) than in the surviving iguanas (mean: 226.56 g, sd: 71.28 g, median: 255.0 g)."}
+iguana <- read.csv("iguana_survival.csv", fileEncoding = "UTF-8-BOM")
+ig_surv <- subset(iguana, survive_died == 1)
+
+fig1 <- ggplot() +
+    geom_histogram(data = iguana,
+                   color = "white",
+                   aes(x = weight, fill = "#e99c9c")) +
+    geom_histogram(data = ig_surv,
+                   color = "white",
+                   aes(x = weight, fill = "#9ba5bd")) +
+    geom_vline(xintercept = as.numeric(mean(iguana$weight)),
+               color = "#166363", linetype = "dotdash") +
+    geom_vline(xintercept = as.numeric(mean(ig_surv$weight)),
+               color = "#645a42", linetype = "dotdash") +
+    scale_fill_identity(breaks = c("#e99c9c", "#9ba5bd"),
+                        labels = c("Pre-Drought",
+                                   "Post-Drought"),
+                        guide = "legend") +
+    scale_x_continuous(breaks = seq(50, 350, 25)) +
+    ggtitle("Body Sizes of a Population of Galapagos Marine Iguanas",
+            paste("Observations of individuals before and after the",
+                  "1982-1983 drought")) +
+    xlab("Weight (grams)") +
+    ylab("Frequency") +
+    theme(plot.title = element_text(color = "#2c3136", size = 18,
+                                    family = "karla", vjust = -0.5),
+          plot.subtitle = element_text(color = "#2c3136", size = 9,
+                                       family = "karla", vjust = -1.6),
+          axis.title.x = element_text(color = "#2c3136", size = 13,
+                                      family = "karla"),
+          axis.title.y = element_text(color = "#2c3136", size = 13,
+                                      family = "karla"),
+          legend.text = element_text(color = "#2c3136", size = 9,
+                                     family = "karla"),
+          legend.position = "top",
+          legend.justification = "right",
+          legend.margin = margin(0,0,0,0),
+          legend.box.margin = margin(-10,0,-10,-10),
+          legend.key.size = unit(0.8, "line")) +
+    labs(fill = "")
+print(fig1)
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; From the data, it can be seen that the drought had the effect of greatly increasing the average body size of the iguana population, with a difference of about 50 g. However, the more interesting effect can be seen through the medians; in the survived population, the median weight of the iguanas is higher than the average, whereas in the pre-drought population the median weight was substantially lower than average. The peaks in the histograms indicate that both medium-small and medium-large sizes are favoured in both sample sets. 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Several claims could be made about these data. It is possible that the general patterns observed in both sample sets are the result of high sexual dimorphism, with females occupying the lower-mass region with a peak around 120 g and males occupying the higher-mass region with a peak of around 215 g pre-drought and 260 g post-drought. If that is indeed the case, then the drought had the effect of selecting for larger iguanas, both male and female; this makes some sense from a biological perspective, as during the competition for food that would naturally ensue in their shoreline habitat, larger individuals would have an advantage. The smaller body size movement in the female population could be attributed to high sexual selection, which may encourage smaller females and larger males in this species, and therefore the males became much larger as a result of the drought (positive pressure from sexual selection + positive pressure from the drought), while females stayed mostly the same (negative pressure from sexual selection + positive pressure from the drought). In the next generation, therefore, it would be expected that male and female body sizes would grow further apart from each other, but the average body size would remain higher than it was before the drought. The disparity in median directions would also, under this scenario, imply that the male population grew in proportion after the drought.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If, on the other hand, there is no sexual dimorphism, then these data must necessarily show that there is an evolutionary fitness benefit for both large and small iguanas, which is an example of diversifying selection. The drought, as a result, would add directional selection to only the larger iguanas and not the smaller ones. This could be for any number of reasons. Larger iguanas may have an advantage in seeking mates and competing for resources, while smaller iguanas may compensate for their size by being better suited to avoiding predation, for example. In this scenario, the dramatic reduction in available resources caused by the drought could have forced smaller iguanas to take more risks in obtaining food, thus negating their predation advantage and resulting in an overall selection for larger iguanas.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Regardless of the specific circumstances, it can be concluded that, in general, larger body sizes were selected for as a result of the drought (and perhaps would have occurred even without the drought), which is indicated in the increase in both the mean and median weight of the population. Moreover, diversifying selection acted on the population as well, with the two peaks in weight frequency moving further apart and the middle valley in weight frequency nearly disappearing.
+
+### **R Code**
+
+```{r message = FALSE, warning = FALSE, results = 'hide', fig.show = 'hide'}
+# Reading csv data and subsetting survived iguanas
+iguana <- read.csv("iguana_survival.csv", fileEncoding = "UTF-8-BOM")
+ig_surv <- subset(iguana, survive_died == 1)
+
+# Plotting results
+fig1 <- ggplot() +
+    # Adding total population histogram
+    geom_histogram(data = iguana,
+                   color = "white",
+                   aes(x = weight, fill = "#e99c9c")) +
+    # Overlaying survived iguana histogram
+    geom_histogram(data = ig_surv,
+                   color = "white",
+                   aes(x = weight, fill = "#9ba5bd")) +
+    # Adding mean line for total population
+    geom_vline(xintercept = as.numeric(mean(iguana$weight)),
+               color = "#166363", linetype = "dotdash") +
+    # Adding mean line for survived iguanas
+    geom_vline(xintercept = as.numeric(mean(ig_surv$weight)),
+               color = "#645a42", linetype = "dotdash") +
+    # Adding legend
+    scale_fill_identity(breaks = c("#e99c9c", "#9ba5bd"),
+                        labels = c("Pre-Drought",
+                                   "Post-Drought"),
+                        guide = "legend") +
+    # Adjusting x-axis tick marks
+    scale_x_continuous(breaks = seq(50, 350, 25)) +
+    # Adding title
+    ggtitle("Body Sizes of a Population of Galapagos Marine Iguanas",
+            paste("Observations of individuals before and after the",
+                  "1982-1983 drought")) +
+    # Adding x-axis title
+    xlab("Weight (grams)") +
+    # Adding y-axis title
+    ylab("Frequency") +
+    # Changing fonts for plot text, adjusting legend position
+    theme(plot.title = element_text(color = "#2c3136", size = 18,
+                                    family = "karla", vjust = -0.5),
+          plot.subtitle = element_text(color = "#2c3136", size = 9,
+                                       family = "karla", vjust = -1.6),
+          axis.title.x = element_text(color = "#2c3136", size = 13,
+                                      family = "karla"),
+          axis.title.y = element_text(color = "#2c3136", size = 13,
+                                      family = "karla"),
+          legend.text = element_text(color = "#2c3136", size = 9,
+                                     family = "karla"),
+          legend.position = "top",
+          legend.justification = "right",
+          legend.margin = margin(0,0,0,0),
+          legend.box.margin = margin(-10,0,-10,-10),
+          legend.key.size = unit(0.8, "line")) +
+    # Removing legend title
+    labs(fill = "")
+print(fig1)
+```

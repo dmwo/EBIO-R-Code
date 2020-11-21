@@ -370,7 +370,3 @@ Kayden: Majority of R coding and some of the write-up
 Yousef: Most of the write-up
 
 Dylan: Bacteria counting, plots/tables, some R code, and R Markdown report formatting
-
-junk
-
-data
