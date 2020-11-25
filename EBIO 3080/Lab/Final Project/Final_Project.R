@@ -3,9 +3,7 @@
 #-----------------------------------------------------------------------------#
 library(showtext)
 library(ggplot2)
-library(htmltools)
 library(dplyr)
-library(latex2exp)
 library(tidyr)
 dest1 <- "C:/Users/Dylan/AppData/Local/Microsoft/Windows/Fonts"
 font_add("karla", regular = file.path(dest1, "Karla-Regular.ttf"))
@@ -122,8 +120,8 @@ gp_amt_idx <- na.omit(match(c("GP1_Amt", "GP2_Amt", "GP3_Amt", "GP4_Amt"),
 # grandparents that drank
 for (i in seq_len(length(gp_idx))) {
     if (i > 1) {
-        data[data[gp_idx[i-1]] == "Unsure", gp_idx[i]] <- "Unsure"
-        data[data[gp_idx[i-1]] == "No", gp_idx[i]] <- "No"
+        data[data[gp_idx[i - 1]] == "Unsure", gp_idx[i]] <- "Unsure"
+        data[data[gp_idx[i - 1]] == "No", gp_idx[i]] <- "No"
     }
     data[data[gp_idx[i]] == "No", gp_days_idx[i]] <- 0
     data[data[gp_idx[i]] == "No", gp_amt_idx[i]] <- "0"
@@ -165,7 +163,6 @@ d_mean <- function(x, col_names) {
     }
     return(arr[-1])
 }
-
 mean_amts <- c(d_mean(data, "Pers_Amt"), d_mean(data, par_amt_idx),
                d_mean(data, sib_amt_idx), d_mean(data, gp_amt_idx)) + 1
 
@@ -229,7 +226,7 @@ fig1 <- ggplot(data, aes(x = Pers_Days, y = Pers_Amt)) +
           legend.box.margin = margin(-10,0,-10,-10),
           legend.key.size = unit(0.8, "line"))
 print(fig1)
-ggsave("scatter.png", units = "in", width = 5, height = 4, dpi = 1000)
+ggsave("scatter.png", units = "in", width = 5, height = 4, dpi = 2000)
 
 # 
 # fig2 <- ggplot() +
