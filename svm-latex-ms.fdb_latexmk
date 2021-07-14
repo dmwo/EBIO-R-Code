@@ -1,0 +1,18 @@
+# Fdb version 3
+["pdflatex"] 1622170959 "d:/Documents/GitHub/EBIO-R-Code/svm-latex-ms.tex" "svm-latex-ms.pdf" "svm-latex-ms" 1622170959
+  "$fontfamily$.sty" 0 -1 0 ""
+  "a:/Program Files/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty" 1622166835 6501 4011d89d9621e0b0901138815ba5ff29 ""
+  "a:/Program Files/texlive/2021/texmf-dist/tex/generic/iftex/ifvtex.sty" 1622166835 1057 525c2192b5febbd8c1f662c9468335bb ""
+  "a:/Program Files/texlive/2021/texmf-dist/tex/latex/base/article.cls" 1622167135 20145 aad8c3dd3bc36e260347b84002182bc2 ""
+  "a:/Program Files/texlive/2021/texmf-dist/tex/latex/base/size10.clo" 1622167135 8449 a72d5d4e612221b46000c3d71724e0ef ""
+  "a:/Program Files/texlive/2021/texmf-dist/tex/latex/geometry/geometry.sty" 1622166467 41601 9cf6c5257b1bc7af01a58859749dd37a ""
+  "a:/Program Files/texlive/2021/texmf-dist/tex/latex/graphics/keyval.sty" 1622166580 2590 e3b24ff953e5b58d924f163d25380312 ""
+  "a:/Program Files/texlive/2021/texmf-dist/web2c/texmf.cnf" 1622167066 40042 fe981136cbb5f3715ab1b0e46e3d3892 ""
+  "a:/Program Files/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1622170504 2746738 8f41a29753996b38c31835097fa5a4fb ""
+  "a:/Program Files/texlive/2021/texmf.cnf" 1622170382 713 e69b156964470283e0530f5060668171 ""
+  "d:/Documents/GitHub/EBIO-R-Code/svm-latex-ms.tex" 1622170818 6677 ae89525e2bd2b3263ea1b831f8fab61a ""
+  "svm-latex-ms.aux" 1622170959 34 3985256e7290058c681f74d7a3565a19 ""
+  "svm-latex-ms.tex" 1622170818 6677 ae89525e2bd2b3263ea1b831f8fab61a ""
+  (generated)
+  "svm-latex-ms.log"
+  "svm-latex-ms.pdf"
